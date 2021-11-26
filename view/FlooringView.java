@@ -214,7 +214,7 @@ public class FlooringView {
         return newOrder;
     }
 
-    public void displayAddOrderResult() {
+    public void displayAddOrderSuccess() {
         io.print("Order successfully added");
     }
 
@@ -234,15 +234,11 @@ public class FlooringView {
      * @return - An integer value representing the User's menu choice
      */
     public int displayEditOrderMenu() {
-        io.print("   * 1. Customer Name");
-        io.print("   * 2. Customer State");
-        io.print("   * 3. Product Type");
-        io.print("   * 4. Area");
-        io.print("   * 5. Discard changes and return to main menu");
-        io.print("   * 6. Save changes and return to main menu");
+        io.print("   * 1. Discard changes and return to main menu");
+        io.print("   * 2. Save changes and return to main menu");
         io.print("   *");
         io.print("  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
-        return io.readInt("Please select from the above choices.", 1, 6);
+        return io.readInt("Please select from the above choices.", 1, 2);
     }
 
     /**
@@ -368,6 +364,14 @@ public class FlooringView {
 
     public void displayRemoveOrderSuccess() {
         io.print("Order removed successfully");
+    }
+
+    public void displayExportDataBanner() {
+        io.print("  * * * * * * * * * * * * * * * Export All Orders * * * * * * * * * * * * * * * ");
+    }
+
+    public void displayExportDataSuccess() {
+        io.print("Data exported successfully");
     }
 
     public void displayUnknownCommandBanner() {
