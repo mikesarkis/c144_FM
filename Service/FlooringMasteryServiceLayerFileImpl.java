@@ -30,9 +30,8 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
     List<FlooringMasteryDaoImpl>list= new ArrayList<>();
     private final String TAXFILE= "Taxes.txt";;
     private final String PRODUCTFILE = "Products.txt";
-    public FlooringMasteryServiceLayerFileImpl(FlooringMasteryDaoImpl dao)
+    public FlooringMasteryServiceLayerFileImpl()
     {
-        this.list.add(dao);
     }
 
       private boolean validatefile(String filename) throws NodateFoundException
