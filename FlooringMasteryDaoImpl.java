@@ -7,6 +7,7 @@ package com.mycompany.flooringmastery.dao;
 
 import com.mycompany.flooringmastery.dto.Order;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -34,6 +35,8 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
     public FlooringMasteryDaoImpl(String filename) // we will pass the file name to the Dao after getting the order date from the user 
     {
         FILE = filename;
+        File myfile = new File(FILE);
+        myfile.createNewFile();
     }
     private Order unmarshallOrder(String text)   // will convert each line in the file to an order object 
     {
