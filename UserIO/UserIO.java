@@ -28,4 +28,6 @@ public interface UserIO {
     String readString(String prompt);
     
     String readString(String prompt, Pattern regexPattern);
+    
+    String readString(String prompt, String errorMsg, Pattern regexPattern);
 }

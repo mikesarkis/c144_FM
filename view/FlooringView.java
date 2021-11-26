@@ -70,10 +70,9 @@ public class FlooringView {
         io.print("  * * * * * * * * * * * * * * * Add An Order * * * * * * * * * * * * * * * ");
     }
 
-    public Order displayAddAnOrder(int nextAvailableOrderNumber, List<Tax> stateTaxes, List<Product> KnownProducts) {
-        Order newOrder;
-        String date = "";
+    public String displayGetNextAvailableOrderDate() {
         boolean keepGoing = true;
+        String newDate = "";
         while (keepGoing) {
             io.print("Enter an order date after the current date - " + LocalDate.now(ZoneId.systemDefault()));
             int year = io.readInt("Enter the year (2000- 2021)", Year.now().getValue(), 2100);
@@ -83,35 +82,34 @@ public class FlooringView {
             LocalDate orderDate = LocalDate.of(year, month, day);
             LocalDate currentDate = LocalDate.now(ZoneId.systemDefault());
             if (orderDate.isAfter(currentDate)) {
-                date = orderDate.toString();
+                newDate = orderDate.toString();
                 keepGoing = false;
             } else {
                 io.print("Enter a valid date in the future");
             }
         }
-        newOrder = new Order(nextAvailableOrderNumber, date);
+        return newDate;
+    }
 
-        keepGoing = true;
+    public Order displayAddCustomerName(Order newOrder) {
+        boolean keepGoing = true;
         while (keepGoing) {
             Pattern p = Pattern.compile("[^a-zA-Z0-9,.]");
-            String newName = io.readString("Enter customer name)", p);
-            if (newName.isEmpty()) {
-                io.print("Invalid input");
-            } else {
-                newOrder.set_customer_name(newName);
-                keepGoing = false;
-            }
+            String newName = io.readString("Enter customer name)", "Invalid Input", p);
+            newOrder.set_customer_name(newName);
+            keepGoing = false;
         }
+        return newOrder;
+    }
 
-        keepGoing = true;
+    public Order displayAddStateToOrder(List<Tax> stateTaxes, Order newOrder) {
+        boolean keepGoing = true;
         while (keepGoing) {
             Pattern p = Pattern.compile("[^a-zA-Z]");
             io.print("Known states");
             stateTaxes.stream().forEach(tax -> io.print(tax.getFullName()));
-            String newState = io.readString("Enter a state ", p);
-            if (newState.isEmpty()) {
-                io.print("Invalid input");
-            } else if (!stateTaxes.stream()
+            String newState = io.readString("Enter a state ", "Invalid Input", p);
+            if (!stateTaxes.stream()
                     .map(tax -> tax.getFullName())
                     .anyMatch(s -> s.equals(newState))) {
                 io.print("State does not exist");
@@ -120,16 +118,17 @@ public class FlooringView {
                 keepGoing = false;
             }
         }
+        return newOrder;
+    }
 
-        keepGoing = true;
+    public Order displayAddProductToOrder(List<Product> KnownProducts, Order newOrder) {
+        boolean keepGoing = true;
         while (keepGoing) {
             Pattern p = Pattern.compile("[^a-zA-Z]");
             io.print("Known products");
             KnownProducts.stream().forEach(product -> io.print(product.getProductName()));
-            String newProduct = io.readString("Enter a product", p);
-            if (newProduct.isEmpty()) {
-                io.print("Invalid input");
-            } else if (!KnownProducts.stream()
+            String newProduct = io.readString("Enter a product", "Invalid Input", p);
+            if (!KnownProducts.stream()
                     .map(product -> product.getProductName())
                     .anyMatch(s -> s.equals(newProduct))) {
                 io.print("Product type does not exist");
@@ -142,21 +141,18 @@ public class FlooringView {
                 keepGoing = false;
             }
         }
-
-        keepGoing = true;
-        while (keepGoing) {
-            Pattern p = Pattern.compile("^(?!(?:\\d{1,2})$)[0-9]\\d+$");
-            String newArea = io.readString("Enter an area. Minimum area is 100 ", p);
-            if (newArea.isEmpty()) {
-                io.print("Invalid input");
-            } else {
-                newOrder.set_area(newArea);
-                keepGoing = false;
-            }
-        }
-        //Still need to set 
-        //CostPerSquareFoot, LaborCostPerSquareFoot, MaterialCost, LaborCost, Tax, Total
         return newOrder;
+    }
+
+    public Order displayAddAreaToOrder(Order newOrder) {
+        Pattern p = Pattern.compile("^(?!(?:\\d{1,2})$)[0-9]\\d+$");
+        String newArea = io.readString("Enter an area. Minimum area is 100 ", "Invalid Input", p);
+        newOrder.set_area(newArea);
+        return newOrder;
+    }
+    
+    public void displayAddOrderResult() {
+        io.print("Order successfully added");
     }
 
     public void displayEditOrderBanner() {
@@ -245,6 +241,10 @@ public class FlooringView {
             return editOrder;
         }
     }
+    
+    public void displayEditOrderResult() {
+        io.print("Order succesfully edited");
+    }
 
     public String displayGetOrderDate() {
         io.print("Enter the date of the order");
@@ -258,5 +258,13 @@ public class FlooringView {
 
     public int displayGetOrderNumber() {
         return io.readInt("Enter an order number");
+    }
+
+    public void displayRemoveOrderBanner() {
+        io.print("  * * * * * * * * * * * * * * * Remove An Order * * * * * * * * * * * * * * * ");
+    }
+    
+        public void displayRemoveOrderResult() {
+        io.print("Order removed successfully");
     }
 }

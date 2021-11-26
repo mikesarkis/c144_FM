@@ -64,6 +64,28 @@ public class UserIOConsoleImpl implements UserIO {
         }
         return stringValue;
     }
+    
+        /**
+     *
+     * @param prompt
+     * @param regexPattern
+     * @return
+     */
+    @Override
+    public String readString(String msgPrompt, String errorMsg, Pattern regexPattern) {
+        boolean invalidInput = true;
+        String stringValue = "";
+        while (invalidInput) {
+            // print the message msgPrompt (ex: asking for the # of cats!)
+            stringValue = this.readString(msgPrompt);
+            if (regexPattern.matcher(stringValue).find()) {
+                this.print("errorMsg");
+            } else {
+                invalidInput = false;
+            }
+        }
+        return stringValue;
+    }
 
     /**
      *
