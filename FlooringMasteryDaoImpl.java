@@ -6,6 +6,8 @@
 package com.mycompany.flooringmastery.dao;
 
 import com.mycompany.flooringmastery.dto.Order;
+import com.mycompany.flooringmastery.dto.Product;
+import com.mycompany.flooringmastery.dto.Tax;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,12 +35,17 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
     private Map<Integer, Order> List_Order = new HashMap<>(); 
     private final String FILE;
     public static final String DELIMITER = ",";
-    public FlooringMasteryDaoImpl(String filename) // we will pass the file name to the Dao after getting the order date from the user 
+    public FlooringMasteryDaoImpl(String filename) throws IOException // we will pass the file name to the Dao after getting the order date from the user 
     {
         FILE = filename;
         File myfile = new File(FILE);
         myfile.createNewFile();
     }
+    public String getfileName()
+    {
+        return FILE;
+    }
+
     private Order unmarshallOrder(String text)   // will convert each line in the file to an order object 
     {
         String[] orderTokens = text.split(DELIMITER);
@@ -46,11 +54,22 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
         Order temp = new Order(ordernumber, date);
         temp.set_customer_name(orderTokens[1]);
         temp.set_state(orderTokens[2]);
-        temp.set_tax_rate(orderTokens[3]);
+        String tax1 = orderTokens[3];
+        BigDecimal a = new BigDecimal(tax1);
+        BigDecimal tax_rate = a.setScale(2, RoundingMode.HALF_UP);
+        temp.set_tax_rate(tax_rate);
         temp.set_product_type(orderTokens[4]);
-        temp.set_area(orderTokens[5]);
-        temp.set_cost_per_square_foot(orderTokens[6]);
-        temp.set_labor_cost_per_square_foot(orderTokens[7]);
+        BigDecimal d = new BigDecimal(orderTokens[5]);
+        BigDecimal area = d.setScale(2,RoundingMode.HALF_UP);
+        temp.set_area(area);
+        String cost1 = orderTokens[6];
+        BigDecimal b = new BigDecimal(cost1);
+        BigDecimal cost_per_square_foot = b.setScale(2, RoundingMode.HALF_UP);
+        temp.set_cost_per_square_foot(cost_per_square_foot);
+        String labor_cost = orderTokens[7];
+        BigDecimal c = new BigDecimal(labor_cost);
+        BigDecimal labor_cost_per_foot = c.setScale(2, RoundingMode.HALF_UP);
+        temp.set_labor_cost_per_square_foot(labor_cost_per_foot);
         return temp;
 
     }
@@ -145,13 +164,37 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
         return order_date;
     }
     @Override
-    public Order addOrder(int number, Order order) { // will add order to the hashmap List_Order and return the object that we added 
+    public Order addOrder(String date, String name, String State, BigDecimal taxrate, String type, BigDecimal area, BigDecimal costperfoot,BigDecimal laborcostperfoot) { // will add order to the hashmap List_Order and return the object that we added 
+        int number=0;
+        Order temp;
         try {
             LoadOrder();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-         List_Order.put(number, order);
+         List<Order> list1 = get_all_orders();
+         if(list1.size()>0)
+         {
+             for(int i=0;i<list1.size();i++)
+             {
+                 number= list1.get(i).get_order_number();
+             }
+             number++;
+       
+             
+         }
+         else{
+             number= 1;
+            }         
+        temp = new Order(number, date);
+        temp.set_customer_name(name);
+        temp.set_state(State);
+        temp.set_tax_rate(taxrate);
+        temp.set_product_type(type);
+        temp.set_area(area);
+        temp.set_cost_per_square_foot(costperfoot);
+        temp.set_labor_cost_per_square_foot(laborcostperfoot);
+        List_Order.put(number, temp);
         try {
             writeOrder();
         } catch (IOException ex) {
@@ -188,35 +231,40 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
     }
 
     @Override
-    public Order edit_order(int number,String data, int choice) { // will edit an order and will use choice to check what the user want to edit 
+    public Order edit_order(int number,Order copy) { // will edit an order and will use choice to check what the user want to edit 
 
             try {
             LoadOrder();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-            if(choice == 1) // if choice =1 edit the customer name 
-            {
-                List_Order.get(number).set_customer_name(data);
-            }
-            if (choice == 2)// if choice =2 edit the state
-            {
-                List_Order.get(number).set_state(data);
-            }
-            if(choice == 3) // if choice = 3 edit the product type 
-            {
-                List_Order.get(number).set_product_type(data);
-            }
-            if(choice ==4) // if choice =4 edit the area 
-            {
-                List_Order.get(number).set_area(data);
-            }
+  
+                List_Order.get(number).set_customer_name(copy.get_customer_name());
+                List_Order.get(number).set_state(copy.get_state());
+                List_Order.get(number).set_tax_rate(copy.get_tax_rate());
+                List_Order.get(number).set_product_type(copy.get_product_type());
+                List_Order.get(number).set_cost_per_square_foot(copy.get_cost_per_square_foot());
+                List_Order.get(number).set_labor_cost_per_square_foot(copy.get_labor_cost_per_square_foot());
+                List_Order.get(number).set_area(copy.get_area());
+                
+
             try {
             writeOrder();
         } catch (IOException ex) {
             Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         Order  temp = List_Order.get(number); // save the object after editing the order and return it to the user 
+        return temp;
+    }
+
+    @Override
+    public Order getOrder(int number) {
+                    try {
+            LoadOrder();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Order temp = List_Order.get(number);
         return temp;
     }
         
