@@ -4,6 +4,8 @@ import com.mycompany.flooringmastery.UserIO.UserIO;
 import com.mycompany.flooringmastery.dto.Order;
 import com.mycompany.flooringmastery.dto.Product;
 import com.mycompany.flooringmastery.dto.Tax;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.YearMonth;
@@ -117,16 +119,16 @@ public class FlooringView {
      * @param newOrder - new Order object to add information to
      * @return - The object with added information
      */
-    public Order displayAddCustomerName(Order newOrder) {
+    public String  displayAddCustomerName() {
         boolean keepGoing = true;
+        String newName="";
         while (keepGoing) {
             //Regex pattern that checks for any values that are not A-Z, a-z, 0-9, or commas and periods
             Pattern p = Pattern.compile("[^a-zA-Z0-9,.]");
-            String newName = io.readString("Enter customer name)", "Invalid Input", p);
-            newOrder.set_customer_name(newName);
+            newName = io.readString("Enter customer name)", "Invalid Input", p);
             keepGoing = false;
         }
-        return newOrder;
+        return newName;
     }
 
     /**
@@ -136,8 +138,9 @@ public class FlooringView {
      * @param newOrder - The order to add information to
      * @return - An Order object with added State information
      */
-    public Order displayAddStateToOrder(List<Tax> stateTaxes, Order newOrder) {
+    public String displayAddStateToOrder(List<Tax> stateTaxes) {
         boolean keepGoing = true;
+        String state ="";
         while (keepGoing) {
             //Regex pattern that checks for any values that are not A-Z or a-z
             Pattern p = Pattern.compile("[^a-zA-Z]");
@@ -156,13 +159,13 @@ public class FlooringView {
                 io.print("State does not exist");
                 //If the User entered a known state, add it to the new Order object
             } else {
-                newOrder.set_state(newState);
+                state = newState;
                 //Break out of the loop
                 keepGoing = false;
             }
         }
         //Return our newORder object with added State information
-        return newOrder;
+        return state;
     }
 
     /**
@@ -172,8 +175,9 @@ public class FlooringView {
      * @param newOrder - The Order object to add information to
      * @return - The order object with added Product information
      */
-    public Order displayAddProductToOrder(List<Product> KnownProducts, Order newOrder) {
+    public String displayAddProductToOrder(List<Product> KnownProducts) {
         boolean keepGoing = true;
+        String type="";
         while (keepGoing) {
             //Regex pattern that checks for any values that are not A-Z or a-z
             Pattern p = Pattern.compile("[^a-zA-Z]");
@@ -191,13 +195,13 @@ public class FlooringView {
 
                 //If the User enters a know product add it to the newOrder
             } else {
-                newOrder.set_product_type(newProduct);
+                type=newProduct;
                 //Break out of loop
                 keepGoing = false;
             }
         }
         //Return the newOrder object with added Product information 
-        return newOrder;
+        return type;
     }
 
     /**
@@ -206,12 +210,13 @@ public class FlooringView {
      * @param newOrder - a new Order to add area information to
      * @return - a new Order with added area information
      */
-    public Order displayAddAreaToOrder(Order newOrder) {
+    public BigDecimal displayAddAreaToOrder() {
         //Regex pattern that checks for any values that are below 100
         Pattern p = Pattern.compile("^(?!(?:\\d{1,2})$)[0-9]\\d+$");
         String newArea = io.readString("Enter an area. Minimum area is 100 ", "Invalid Input", p);
-        newOrder.set_area(newArea);
-        return newOrder;
+        BigDecimal a = new BigDecimal(newArea);
+        BigDecimal newArea2= a.setScale(2, RoundingMode.HALF_UP);
+        return newArea2;
     }
 
     public void displayAddOrderSuccess() {
@@ -330,7 +335,9 @@ public class FlooringView {
             io.print("Area not changed");
             return editOrder;
         } else {
-            editOrder.set_area(newArea);
+            BigDecimal a = new BigDecimal(newArea);
+            BigDecimal newArea2= a.setScale(2, RoundingMode.HALF_UP);
+            editOrder.set_area(newArea2);
             return editOrder;
         }
     }
