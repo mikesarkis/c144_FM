@@ -9,14 +9,13 @@ package com.mycompany.flooringmastery.serivce;
  *
  * @author Mike
  */
-public class NospecificorderException extends Exception{
-        public NospecificorderException(String message)
+public class NoorderFoundException extends Exception{
+    public NoorderFoundException(String message)
     {
         super(message);
     }
-    public NospecificorderException(String message, Throwable cause)
+    public NoorderFoundException(String message, Throwable cause)
     {
         super(message, cause);
     }
-    
 }
