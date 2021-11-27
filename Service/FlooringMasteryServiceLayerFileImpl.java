@@ -27,11 +27,12 @@ import java.util.logging.Logger;
  * @author Mike
  */
 public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServiceLayer{
-    List<FlooringMasteryDaoImpl>list= new ArrayList<>();
+    List<FlooringMasteryDaoImpl>list;
     private final String TAXFILE= "Taxes.txt";;
     private final String PRODUCTFILE = "Products.txt";
     public FlooringMasteryServiceLayerFileImpl()
     {
+        list = = new ArrayList<>();
     }
 
       private boolean validatefile(String filename) throws NodateFoundException
