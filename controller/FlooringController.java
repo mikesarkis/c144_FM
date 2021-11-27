@@ -5,8 +5,10 @@ import com.mycompany.flooringmastery.view.FlooringView;
 import com.mycompany.flooringmastery.dto.Order;
 import com.mycompany.flooringmastery.dto.Product;
 import com.mycompany.flooringmastery.dto.Tax;
-import com.mycompany.flooringmastery.serivce.NodateFoundException;
+import com.mycompany.flooringmastery.serivce.NoorderFoundException;
+import com.mycompany.flooringmastery.serivce.NospecificorderException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class FlooringController {
 
     private FlooringMasteryServiceLayerFileImpl service;
     private FlooringView view;
-
+    
     @Autowired
     public FlooringController(FlooringMasteryServiceLayerFileImpl service, FlooringView view) {
         this.service = service;
@@ -72,30 +74,47 @@ public class FlooringController {
         }
     }
 
-    public void listOrders() throws NodateFoundException { //throws Exception
+    public void listOrders() throws NoorderFoundException, IOException { //throws Exception
         view.displayOrdersBanner();
         String date = view.displayGetOrderDate();
         List<Order> list1 = service.getOrders(date);
+        if (list1.size()>0)
+        {
         view.displayOrders(list1);
+        }
+        else
+            view.displaynoOrders();
     }
 
-    public void addOrder() throws FileNotFoundException, NodateFoundException { //throws Exception
+    public void addOrder() throws FileNotFoundException, NoorderFoundException, IOException { //throws Exception
         view.displayAddOrderBanner();
         String date = view.displayGetNextAvailableOrderDate(); //Place the order date for a time in the future
         String name = view.displayAddCustomerName();
         List<Tax> list_state = service.getalltaxes();
         String state = view.displayAddStateToOrder(list_state);
         BigDecimal taxrate = service.getTaxrate(state);
+        System.out.println(taxrate);
         List<Product> list_product= service.getallproduct();
         String product_type = view.displayAddProductToOrder(list_product);
-        BigDecimal area = view.displayAddAreaToOrder();
+        System.out.println(product_type);
         BigDecimal costperfoot = service.getcost(product_type);
+        System.out.println(costperfoot);
         BigDecimal laborcostperfoot = service.getLaborcost(product_type);
+        System.out.println(laborcostperfoot);
+        BigDecimal area = view.displayAddAreaToOrder();
+        System.out.println(area);
         Order temp = service.addorder(date, name, state, taxrate, product_type,area, costperfoot, laborcostperfoot);
+        if(temp != null)
+                {
         view.displayAddOrderSuccess(); //If no error was thrown then Order was added successfully
+                }
+        else
+        {
+            view.displayordererror();
+        }
     }
 
-    public void editOrder() throws NodateFoundException, FileNotFoundException { //throws Exception
+    public void editOrder() throws NoorderFoundException, FileNotFoundException, IOException, NospecificorderException { //throws Exception
         view.displayEditOrderBanner();
         String dateOfOrderToRetrieve = view.displayGetOrderDate();
         int orderNumberToRetrieve = view.displayGetOrderNumber();
@@ -132,7 +151,7 @@ public class FlooringController {
         }
     }
 
-    public void removeOrder() throws NodateFoundException { //throws Exception
+    public void removeOrder() throws NoorderFoundException, IOException, NospecificorderException { //throws Exception
         view.displayRemoveOrderBanner();
         String dateOfOrderToRetrieve = view.displayGetOrderDate();
         int orderNumberToRetrieve = view.displayGetOrderNumber();
@@ -140,9 +159,10 @@ public class FlooringController {
         view.displayRemoveOrderSuccess();
     }
     
-    public void exportData() { //throws Exception
+    public void exportData() throws IOException { //throws Exception
         view.displayExportDataBanner();
-        //service.exportData(); //Possibly throw Exception if error exporting data
+        String dateOfOrderToRetrieve = view.displayGetOrderDate();
+        service.exportData(dateOfOrderToRetrieve);
         view.displayExportDataSuccess();
     }
 
