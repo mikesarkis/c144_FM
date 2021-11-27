@@ -212,7 +212,7 @@ public class FlooringView {
      */
     public BigDecimal displayAddAreaToOrder() {
         //Regex pattern that checks for any values that are below 100
-        Pattern p = Pattern.compile("^(?!(?:\\d{1,2})$)[0-9]\\d+$");
+        Pattern p = Pattern.compile("\\\\b(0*(?:[1-9][0-9]?))\\\\b");
         String newArea = io.readString("Enter an area. Minimum area is 100 ", "Invalid Input", p);
         BigDecimal a = new BigDecimal(newArea);
         BigDecimal newArea2= a.setScale(2, RoundingMode.HALF_UP);
@@ -278,7 +278,7 @@ public class FlooringView {
         Pattern p = Pattern.compile("[^a-zA-Z]");
 
         while (keepGoing) {
-            String newState = io.readString("Enter a state (" + editOrder.get_order_number() + ") :", p);
+            String newState = io.readString("Enter a state (" + editOrder.get_state() + ") :", p);
             if (newState.isEmpty()) {
                 io.print("Customer state not changed");
                 return editOrder;
@@ -329,7 +329,7 @@ public class FlooringView {
      * @return - an Order with new or unchanged area information
      */
     public Order displayEditOrderArea(Order editOrder) {
-        Pattern p = Pattern.compile("^(?!(?:\\d{1,2})$)[0-9]\\d+$");
+        Pattern p = Pattern.compile("\\\\b(0*(?:[1-9][0-9]?))\\\\b");
         String newArea = io.readString("Enter an area. Minimum area is 100 (" + editOrder.get_area() + ") :", p);
         if (newArea.isEmpty()) {
             io.print("Area not changed");
@@ -392,5 +392,13 @@ public class FlooringView {
 
     public void displayExitBanner() {
         io.print("Exiting Flooring Mastery");
+    }
+    public void displaynoOrders()
+    {
+        io.print("we don't have any orders for this date");
+    }
+    public void displayordererror()
+    {
+        io.print("order was not added");
     }
 }
