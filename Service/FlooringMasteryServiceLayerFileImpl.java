@@ -32,7 +32,7 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
     private final String PRODUCTFILE = "Products.txt";
     public FlooringMasteryServiceLayerFileImpl()
     {
-        list = = new ArrayList<>();
+        list =  new ArrayList<>();
     }
 
       private boolean validatefile(String filename) throws NodateFoundException
