@@ -6,8 +6,6 @@
 package com.mycompany.flooringmastery.dao;
 
 import com.mycompany.flooringmastery.dto.Order;
-import com.mycompany.flooringmastery.dto.Product;
-import com.mycompany.flooringmastery.dto.Tax;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +22,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 
@@ -31,20 +31,38 @@ import java.util.logging.Logger;
  *
  * @author Mike
  */
+@Component
 public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
     private Map<Integer, Order> List_Order = new HashMap<>(); 
-    private final String FILE;
+    private  String FILE;
+    private final String EXPORTFILE= "DataExport.txt";
+    private final String ORDERNUMBERFILE= "AllOrderNumbers.txt";
     public static final String DELIMITER = ",";
-    public FlooringMasteryDaoImpl(String filename) throws IOException // we will pass the file name to the Dao after getting the order date from the user 
+    @Autowired
+    public FlooringMasteryDaoImpl() // we will pass the file name to the Dao after getting the order date from the user 
+    {
+        FILE = "default.txt";
+
+    }
+    @Override
+    public void setFileName(String filename) throws IOException
     {
         FILE = filename;
         File myfile = new File(FILE);
+        if(myfile.exists())
+        {
+            // do nothing
+        }
+        else{
         myfile.createNewFile();
+        writeOrder();
+        }
     }
     public String getfileName()
     {
         return FILE;
     }
+
 
     private Order unmarshallOrder(String text)   // will convert each line in the file to an order object 
     {
@@ -267,6 +285,32 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
         Order temp = List_Order.get(number);
         return temp;
     }
+
+    @Override
+    public void exportData() throws IOException {
+        try {
+            LoadOrder();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        PrintWriter out; 
+        out = new PrintWriter(new FileWriter(EXPORTFILE), true);
+        String firstline = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total,OrderDate";
+        out.println(firstline);
+        out.flush();
+        String Ordertxt;
+        List<Order> list1 =  this.get_all_orders();
+        for (Order current : list1) // will write every order in the list to the file 
+        {
+            Ordertxt = marshallOrder(current)+ current.get_order_date();
+            out.println(Ordertxt);
+            out.flush();
+        }
+        out.close();
+        
+        
+    }
+
         
     }
 
