@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -36,14 +35,8 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
     private Map<Integer, Order> List_Order = new HashMap<>(); 
     private  String FILE;
     private final String EXPORTFILE= "DataExport.txt";
-    private final String ORDERNUMBERFILE= "AllOrderNumbers.txt";
     public static final String DELIMITER = ",";
-    @Autowired
-    public FlooringMasteryDaoImpl() // we will pass the file name to the Dao after getting the order date from the user 
-    {
-        FILE = "default.txt";
 
-    }
     @Override
     public void setFileName(String filename) throws IOException
     {
@@ -157,7 +150,6 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao{
         }
         for(int i=0 ; i< ch.length;i++) // will use the array of charcters to save the day and the month and the year 
         {
-            System.out.println(ch[i]);
           if(i == 0)   // we will use the first and the second  postions to save the day
            {
             day = day + String.valueOf(ch[i]);
