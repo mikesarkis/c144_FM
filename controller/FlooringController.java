@@ -5,7 +5,7 @@ import com.mycompany.flooringmastery.view.FlooringView;
 import com.mycompany.flooringmastery.dto.Order;
 import com.mycompany.flooringmastery.dto.Product;
 import com.mycompany.flooringmastery.dto.Tax;
-import com.mycompany.flooringmastery.serivce.NoorderFoundException;
+import com.mycompany.flooringmastery.serivce.NoOrderFoundException;
 import com.mycompany.flooringmastery.serivce.NospecificorderException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,12 +31,11 @@ public class FlooringController {
     }
 
     //Where main method from App sends us first
-    public void run() {
+    public void run() throws NoOrderFoundException, IOException, FileNotFoundException, NospecificorderException {
         //Boolean to keep program running until we choose to exit
         boolean keepGoing = true;
         //int value which will be set by the user to choose a program function from the menu
         int menuSelection = 0;
-        try {
             //Until user presses '6' keep prompting the user for menu choice 
             while (keepGoing) {
                 //Get menu choice from the user
@@ -67,26 +66,17 @@ public class FlooringController {
             }
             //After we break out of the menu choice loop, display an exit message before ending the program
             exitMessage();
-
-            //If there are any errors, catch them and print the error
-        } catch (Exception e) {
-            view.displayErrorMessage(e.getMessage());
-        }
     }
 
-    public void listOrders() throws NoorderFoundException, IOException { //throws Exception
+    public void listOrders() throws NoOrderFoundException, IOException { //throws Exception
         view.displayOrdersBanner();
         String date = view.displayGetOrderDate();
         List<Order> list1 = service.getOrders(date);
-        if (list1.size()>0)
-        {
         view.displayOrders(list1);
-        }
-        else
-            view.displaynoOrders();
+
     }
 
-    public void addOrder() throws FileNotFoundException, NoorderFoundException, IOException { //throws Exception
+    public void addOrder() throws FileNotFoundException, NoOrderFoundException, IOException { //throws Exception
         view.displayAddOrderBanner();
         String date = view.displayGetNextAvailableOrderDate(); //Place the order date for a time in the future
         String name = view.displayAddCustomerName();
@@ -114,20 +104,21 @@ public class FlooringController {
         }
     }
 
-    public void editOrder() throws NoorderFoundException, FileNotFoundException, IOException, NospecificorderException { //throws Exception
+    public void editOrder() throws NoOrderFoundException, FileNotFoundException, IOException, NospecificorderException { //throws Exception
         view.displayEditOrderBanner();
         String dateOfOrderToRetrieve = view.displayGetOrderDate();
         int orderNumberToRetrieve = view.displayGetOrderNumber();
         //Maintain the original copy of the object in case the User decides to discard their edits
         Order originalOrder = service.getOrder(orderNumberToRetrieve, dateOfOrderToRetrieve); 
         //Create a new Order object from the original Order. All edits will take place on this object
+        if(originalOrder != null)
+        {
         Order orderToEdit = new Order(originalOrder.get_order_number(), originalOrder.get_order_date() );
         orderToEdit.set_customer_name(originalOrder.get_customer_name() );
         orderToEdit.set_state(originalOrder.get_state() );
         orderToEdit.set_tax_rate(originalOrder.get_tax_rate() );
         orderToEdit.set_product_type(originalOrder.get_product_type() );
         orderToEdit.set_area(originalOrder.get_area() );
-
         orderToEdit = view.displayEditCustomerName(orderToEdit);
         orderToEdit = view.displayEditCustomerState(service.getalltaxes(), orderToEdit);
         BigDecimal rate = service.getTaxrate(orderToEdit.get_state());
@@ -138,6 +129,7 @@ public class FlooringController {
         BigDecimal laborcost = service.getLaborcost(orderToEdit.get_product_type());
         orderToEdit.set_labor_cost_per_square_foot(laborcost);
         orderToEdit = view.displayEditOrderArea(orderToEdit);
+        
         int menuSelection = view.displayEditOrderMenu();
         switch (menuSelection) {
             case 1:
@@ -149,9 +141,10 @@ public class FlooringController {
                 view.displayEditOrderSuccess();
                 break;
         }
+        }
     }
 
-    public void removeOrder() throws NoorderFoundException, IOException, NospecificorderException { //throws Exception
+    public void removeOrder() throws NoOrderFoundException, IOException, NospecificorderException { //throws Exception
         view.displayRemoveOrderBanner();
         String dateOfOrderToRetrieve = view.displayGetOrderDate();
         int orderNumberToRetrieve = view.displayGetOrderNumber();
