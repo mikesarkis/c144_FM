@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.flooringmastery.serivce;
+package com.mycompany.flooringmastery.service;
 
 /**
  *
  * @author Mike
  */
-public class NospecificorderException extends Exception{
-        public NospecificorderException(String message)
+public class NoSpecificOrderException extends Exception{
+        public NoSpecificOrderException(String message)
     {
         super(message);
     }
-    public NospecificorderException(String message, Throwable cause)
+    public NoSpecificOrderException(String message, Throwable cause)
     {
         super(message, cause);
     }
