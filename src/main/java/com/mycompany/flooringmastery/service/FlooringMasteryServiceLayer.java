@@ -18,7 +18,7 @@ import java.util.List;
  * @author Mike
  */
 public interface FlooringMasteryServiceLayer {
-    public Order addOrder(String date, String name, String State, BigDecimal taxrate, String type,BigDecimal costperfoot,BigDecimal laborcostperfoot, BigDecimal area ) throws IOException;
+    public Order addOrder(String date, String name, String State, BigDecimal taxrate, String type,BigDecimal costperfoot,BigDecimal laborcostperfoot, BigDecimal area ) throws FileNotFoundException, IOException;
     public Order editOrder(int number, String date, Order copy) throws IOException, NoOrderFoundException , NoSpecificOrderException;
     public void removeOrder(int number, String date) throws IOException, NoOrderFoundException , NoSpecificOrderException;
     public Order getOrder(int number, String date) throws IOException, NoOrderFoundException , NoSpecificOrderException;

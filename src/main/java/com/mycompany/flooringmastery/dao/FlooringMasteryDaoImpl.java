@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.stereotype.Component;
 
 /**
@@ -173,14 +171,12 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     }
 
     @Override
-    public Order addOrder(String date, String name, String State, BigDecimal taxrate, String type, BigDecimal area, BigDecimal costperfoot, BigDecimal laborcostperfoot) { // will add order to the hashmap List_Order and return the object that we added 
+    public Order addOrder(String date, String name, String State, BigDecimal taxrate, String type, BigDecimal area, BigDecimal costperfoot, BigDecimal laborcostperfoot) throws FileNotFoundException, IOException { // will add order to the hashmap List_Order and return the object that we added 
         int number = 0;
         Order temp;
-        try {
-            LoadOrder();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        LoadOrder();
+
         List<Order> list1 = get_all_orders();
         if (list1.size() > 0) {
             for (int i = 0; i < list1.size(); i++) {
@@ -200,60 +196,45 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
         temp.set_cost_per_square_foot(costperfoot);
         temp.set_labor_cost_per_square_foot(laborcostperfoot);
         List_Order.put(number, temp);
-        try {
-            writeOrder();
-        } catch (IOException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        writeOrder();
+
         return List_Order.get(number);
     }
 
     @Override
-    public Order getOrder(int number) {
-        try {
-            LoadOrder();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public Order getOrder(int number) throws FileNotFoundException {
+
+        LoadOrder();
+
         Order temp = List_Order.get(number);
         return temp;
     }
 
     @Override
-    public List<Order> get_all_orders() { // will return all the orders in the file so naturally it will return all order for a specific date 
-        try {
-            LoadOrder();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public List<Order> get_all_orders() throws FileNotFoundException { // will return all the orders in the file so naturally it will return all order for a specific date 
+        LoadOrder();
+
         return new ArrayList<>(List_Order.values());
     }
 
     @Override
-    public Order remove_order(int number) { // will remove an order and return the removed item 
+    public Order remove_order(int number) throws FileNotFoundException, IOException { // will remove an order and return the removed item 
         Order temp;
-        try {
-            LoadOrder();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        LoadOrder();
+
         temp = List_Order.remove(number);
-        try {
-            writeOrder();
-        } catch (IOException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        writeOrder();
+
         return temp;
     }
 
     @Override
-    public Order edit_order(int number, Order copy) { // will edit an order and will use choice to check what the user want to edit 
+    public Order edit_order(int number, Order copy) throws FileNotFoundException, IOException { // will edit an order and will use choice to check what the user want to edit 
 
-        try {
-            LoadOrder();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        LoadOrder();
 
         List_Order.get(number).set_customer_name(copy.get_customer_name());
         List_Order.get(number).set_state(copy.get_state());
@@ -263,22 +244,16 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
         List_Order.get(number).set_labor_cost_per_square_foot(copy.get_labor_cost_per_square_foot());
         List_Order.get(number).set_area(copy.get_area());
 
-        try {
-            writeOrder();
-        } catch (IOException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        writeOrder();
+
         Order temp = List_Order.get(number); // save the object after editing the order and return it to the user 
         return temp;
     }
 
     @Override
-    public void exportData() throws IOException {
-        try {
-            LoadOrder();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void exportData() throws FileNotFoundException, IOException {
+        LoadOrder();
+
         PrintWriter out;
         out = new PrintWriter(new FileWriter(EXPORTFILE), true);
         String firstline = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total,OrderDate";

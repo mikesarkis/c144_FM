@@ -6,7 +6,6 @@
 package com.mycompany.flooringmastery.service;
 
 import com.mycompany.flooringmastery.dao.FlooringMasteryDao;
-import com.mycompany.flooringmastery.dao.FlooringMasteryDaoImpl;
 import static com.mycompany.flooringmastery.dao.FlooringMasteryDaoImpl.DELIMITER;
 import com.mycompany.flooringmastery.dto.Order;
 import com.mycompany.flooringmastery.dto.Product;
@@ -35,7 +34,7 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
     private final String PRODUCTFILE = "Products.txt";
 
     @Autowired
-    public FlooringMasteryServiceLayerFileImpl(FlooringMasteryDaoImpl dao) {
+    public FlooringMasteryServiceLayerFileImpl(FlooringMasteryDao dao) {
         this.dao = dao;
     }
 
@@ -44,12 +43,11 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         dao.setFileName(filename);
         List<Order> list = dao.get_all_orders();
 
-            if (list.size() > 0) {
-                return found;
-            } else {
-                throw new NoOrderFoundException("There are no orders for this date");
-            }
-
+        if (list.size() > 0) {
+            return found;
+        } else {
+            throw new NoOrderFoundException("There are no orders for this date");
+        }
 
     }
 
@@ -62,13 +60,11 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
                 found = true;
             }
         }
-            if (found == true) {
-                return found;
-            } else {
-                throw new NoSpecificOrderException("this specific order was not  found on this date");
-            }
-
-
+        if (found == true) {
+            return found;
+        } else {
+            throw new NoSpecificOrderException("this specific order was not  found on this date");
+        }
     }
 
     private String fixDate(String date) {
@@ -130,7 +126,6 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         validateSpecificOrder(number, fileName);
         dao.setFileName(fileName);
         dao.remove_order(number);
-
     }
 
     @Override
@@ -197,7 +192,6 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         }
 
         return list1.get(index).getTaxRate();
-
     }
 
     private Product unmarshallProduct(String text) {
@@ -262,5 +256,4 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         dao.exportData();
 
     }
-
 }
