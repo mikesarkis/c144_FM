@@ -38,29 +38,25 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         this.dao = dao;
     } 
 
-      private boolean validateOrderFile(String filename) throws NoorderFoundException, IOException
+      private boolean validateOrderFile(String filename) throws NoOrderFoundException, IOException
       {
           boolean found = false;
           dao.setFileName(filename);
           List<Order> list = dao.get_all_orders();
-          if(list.size()>0)
-          {
-              found = true;
-          }
-          try{  if( found == true)
+          try{  if( list.size()>0)
             {
                 return found;
             }
           else
-          throw new NoorderFoundException("no order found on this date");
-          }catch (NoorderFoundException e)
+          throw new NoOrderFoundException("no order found on this date");
+          }catch (NoOrderFoundException e)
           {
               System.out.println(e.getMessage());
                return false;
           }
            
       }
-      private boolean validateSpecificOrder(int number, String filename) throws IOException, NoorderFoundException, NospecificorderException
+      private boolean validateSpecificOrder(int number, String filename) throws IOException, NoOrderFoundException, NospecificorderException
       {
           boolean found = false;
           dao.setFileName(filename);
@@ -122,68 +118,55 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
     }
 
     @Override
-    public Order editOrder(int number, String date, Order copy) throws IOException, NoorderFoundException , NospecificorderException{
+    public Order editOrder(int number, String date, Order copy) throws IOException, NoOrderFoundException , NospecificorderException{
         String fileName;
         String datefixed =  fixdate(date);
         fileName = "Orders_"+datefixed+".txt";
-        dao.setFileName(fileName);
-        Order temp;
-        if( validateOrderFile(fileName)&&validateSpecificOrder(number, fileName))
-            {
-               
-             temp =  dao.edit_order(number, copy);
-            }
-        else
-            temp= null;
         
-        return temp;
-
-    }
-
-    @Override
-    public void removeOrder(int number, String date)  throws IOException, NoorderFoundException , NospecificorderException{
-        String fileName;
-        String datefixed =  fixdate(date);
-        fileName = "Orders_"+datefixed+".txt";
-        dao.setFileName(fileName);
-        if( validateOrderFile(fileName)&&validateSpecificOrder(number, fileName))
-            {
-               dao.remove_order(number);
-            }
-    }
-
-    @Override
-    public Order getOrder(int number, String date) throws IOException, NoorderFoundException , NospecificorderException{
-        String fileName;
-        String datefixed =  fixdate(date);
-        fileName = "Orders_"+datefixed+".txt";
-        dao.setFileName(fileName);
         Order temp;
-        if( validateOrderFile(fileName)&&validateSpecificOrder(number, fileName))
-            {
-               
-               temp = dao.getOrder(number);
-            }
-        else
-            temp = null;
+        validateOrderFile(fileName);
+        validateSpecificOrder(number, fileName);
+        dao.setFileName(fileName);
+        temp =  dao.edit_order(number, copy);
+        return temp;
+
+    }
+
+    @Override
+    public void removeOrder(int number, String date)  throws IOException, NoOrderFoundException , NospecificorderException{
+        String fileName;
+        String datefixed =  fixdate(date);
+        fileName = "Orders_"+datefixed+".txt";  
+        validateOrderFile(fileName);
+        validateSpecificOrder(number, fileName);
+        dao.setFileName(fileName);
+        dao.remove_order(number);
+            
+    }
+
+    @Override
+    public Order getOrder(int number, String date) throws IOException, NoOrderFoundException , NospecificorderException{
+        String fileName;
+        String datefixed =  fixdate(date);
+        fileName = "Orders_"+datefixed+".txt";
+        Order temp= null;
+        validateOrderFile(fileName);
+        validateSpecificOrder(number, fileName);
+        dao.setFileName(fileName);
+        temp = dao.getOrder(number);
+      
         return temp;
     }
 
     @Override
-    public List<Order> getOrders(String date) throws  NoorderFoundException, IOException{
+    public List<Order> getOrders(String date) throws  NoOrderFoundException, IOException{
         String fileName;
         String datefixed =  fixdate(date);
-        fileName = "Orders_"+datefixed+".txt";
-        FlooringMasteryDaoImpl dao1;
-        dao.setFileName(fileName);
+        fileName = "Orders_"+datefixed+".txt";      
         List<Order> List_temp;
-        if(validateOrderFile(fileName))
-            {
-               List_temp = dao.get_all_orders();
-            }
-        else
-            List_temp = null;
-        
+        validateOrderFile(fileName);
+        dao.setFileName(fileName);
+        List_temp = dao.get_all_orders();
         return List_temp;
     }
 
