@@ -1,12 +1,12 @@
 package com.mycompany.flooringmastery.controller;
 
-import com.mycompany.flooringmastery.serivce.FlooringMasteryServiceLayerFileImpl;
+import com.mycompany.flooringmastery.service.FlooringMasteryServiceLayerFileImpl;
 import com.mycompany.flooringmastery.view.FlooringView;
 import com.mycompany.flooringmastery.dto.Order;
 import com.mycompany.flooringmastery.dto.Product;
 import com.mycompany.flooringmastery.dto.Tax;
-import com.mycompany.flooringmastery.serivce.NoOrderFoundException;
-import com.mycompany.flooringmastery.serivce.NospecificorderException;
+import com.mycompany.flooringmastery.service.NoOrderFoundException;
+import com.mycompany.flooringmastery.service.NoSpecificOrderException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -23,7 +23,7 @@ public class FlooringController {
 
     private FlooringMasteryServiceLayerFileImpl service;
     private FlooringView view;
-    
+
     @Autowired
     public FlooringController(FlooringMasteryServiceLayerFileImpl service, FlooringView view) {
         this.service = service;
@@ -65,7 +65,7 @@ public class FlooringController {
                 default:
                     unknownCommand();
             }
-            }catch (NoOrderFoundException | NospecificorderException | IOException e) {
+            }catch (NoOrderFoundException | NoSpecificOrderException | IOException e) {
                 view.displayErrorMessage(e.getMessage());
             }
         }
@@ -78,85 +78,79 @@ public class FlooringController {
         String date = view.displayGetOrderDate();
         List<Order> list1 = service.getOrders(date);
         view.displayOrders(list1);
-
     }
 
     public void addOrder() throws FileNotFoundException, NoOrderFoundException, IOException { //throws Exception
         view.displayAddOrderBanner();
         String date = view.displayGetNextAvailableOrderDate(); //Place the order date for a time in the future
         String name = view.displayAddCustomerName();
-        List<Tax> list_state = service.getalltaxes();
+        List<Tax> list_state = service.getAllTaxes();
         String state = view.displayAddStateToOrder(list_state);
-        BigDecimal taxrate = service.getTaxrate(state);
-        System.out.println(taxrate);
-        List<Product> list_product= service.getallproduct();
+        BigDecimal taxrate = service.getTaxRate(state);
+        List<Product> list_product = service.getAllProduct();
         String product_type = view.displayAddProductToOrder(list_product);
-        System.out.println(product_type);
-        BigDecimal costperfoot = service.getcost(product_type);
-        System.out.println(costperfoot);
-        BigDecimal laborcostperfoot = service.getLaborcost(product_type);
-        System.out.println(laborcostperfoot);
+
+        BigDecimal costperfoot = service.getCost(product_type);
+
+        BigDecimal laborcostperfoot = service.getLaborCost(product_type);
+
         BigDecimal area = view.displayAddAreaToOrder();
-        System.out.println(area);
-        Order temp = service.addorder(date, name, state, taxrate, product_type,area, costperfoot, laborcostperfoot);
-        if(temp != null)
-                {
-        view.displayAddOrderSuccess(); //If no error was thrown then Order was added successfully
-                }
-        else
-        {
-            view.displayordererror();
+
+        Order temp = service.addOrder(date, name, state, taxrate, product_type, area, costperfoot, laborcostperfoot);
+        if (temp != null) {
+            view.displayAddOrderSuccess(); //If no error was thrown then Order was added successfully
+        } else {
+            view.displayOrderError();
         }
     }
 
-    public void editOrder() throws NoOrderFoundException, FileNotFoundException, IOException, NospecificorderException { //throws Exception
+    public void editOrder() throws NoOrderFoundException, FileNotFoundException, IOException, NoSpecificOrderException { //throws Exception
         view.displayEditOrderBanner();
-        String dateOfOrderToRetrieve = view.displayGetOrderDatetoEdit();
+        String dateOfOrderToRetrieve = view.displayGetOrderDate();
         int orderNumberToRetrieve = view.displayGetOrderNumber();
         //Maintain the original copy of the object in case the User decides to discard their edits
-        Order originalOrder = service.getOrder(orderNumberToRetrieve, dateOfOrderToRetrieve); 
+        Order originalOrder = service.getOrder(orderNumberToRetrieve, dateOfOrderToRetrieve);
         //Create a new Order object from the original Order. All edits will take place on this object
-        if(originalOrder != null)
-        {
-        Order orderToEdit = new Order(originalOrder.get_order_number(), originalOrder.get_order_date() );
-        orderToEdit.set_customer_name(originalOrder.get_customer_name() );
-        orderToEdit.set_state(originalOrder.get_state() );
-        orderToEdit.set_tax_rate(originalOrder.get_tax_rate() );
-        orderToEdit.set_product_type(originalOrder.get_product_type() );
-        orderToEdit.set_area(originalOrder.get_area() );
-        orderToEdit = view.displayEditCustomerName(orderToEdit);
-        orderToEdit = view.displayEditCustomerState(service.getalltaxes(), orderToEdit);
-        BigDecimal rate = service.getTaxrate(orderToEdit.get_state());
-        orderToEdit.set_tax_rate(rate);
-        orderToEdit = view.displayEditProductType(service.getallproduct(), orderToEdit);
-        BigDecimal cost1= service.getcost(orderToEdit.get_product_type());
-        orderToEdit.set_cost_per_square_foot(cost1);
-        BigDecimal laborcost = service.getLaborcost(orderToEdit.get_product_type());
-        orderToEdit.set_labor_cost_per_square_foot(laborcost);
-        orderToEdit = view.displayEditOrderArea(orderToEdit);
-        
-        int menuSelection = view.displayEditOrderMenu();
-        switch (menuSelection) {
-            case 1:
-                //Don't do anything as the User has decided to discard their edits
-                break;
-            case 2:
-                //service.addOrder(orderToEdit); //Possibly throw Exception if service cannot add the new Order
-                service.editOrder(originalOrder.get_order_number(), dateOfOrderToRetrieve, orderToEdit);
-                view.displayEditOrderSuccess();
-                break;
-        }
+        if (originalOrder != null) {
+            Order orderToEdit = new Order(originalOrder.get_order_number(), originalOrder.get_order_date());
+            orderToEdit.set_customer_name(originalOrder.get_customer_name());
+            orderToEdit.set_state(originalOrder.get_state());
+            orderToEdit.set_tax_rate(originalOrder.get_tax_rate());
+            orderToEdit.set_product_type(originalOrder.get_product_type());
+            orderToEdit.set_area(originalOrder.get_area());
+
+            orderToEdit = view.displayEditCustomerName(orderToEdit);
+            orderToEdit = view.displayEditCustomerState(service.getAllTaxes(), orderToEdit);
+            BigDecimal rate = service.getTaxRate(orderToEdit.get_state());
+            orderToEdit.set_tax_rate(rate);
+            orderToEdit = view.displayEditProductType(service.getAllProduct(), orderToEdit);
+            BigDecimal cost1 = service.getCost(orderToEdit.get_product_type());
+            orderToEdit.set_cost_per_square_foot(cost1);
+            BigDecimal laborcost = service.getLaborCost(orderToEdit.get_product_type());
+            orderToEdit.set_labor_cost_per_square_foot(laborcost);
+            orderToEdit = view.displayEditOrderArea(orderToEdit);
+            int menuSelection = view.displayEditOrderMenu();
+            switch (menuSelection) {
+                case 1:
+                    //Don't do anything as the User has decided to discard their edits
+                    break;
+                case 2:
+                    //service.addOrder(orderToEdit); //Possibly throw Exception if service cannot add the new Order
+                    service.editOrder(originalOrder.get_order_number(), dateOfOrderToRetrieve, orderToEdit);
+                    view.displayEditOrderSuccess();
+                    break;
+            }
         }
     }
 
-    public void removeOrder() throws NoOrderFoundException, IOException, NospecificorderException { //throws Exception
+    public void removeOrder() throws NoOrderFoundException, IOException, NoSpecificOrderException { //throws Exception
         view.displayRemoveOrderBanner();
         String dateOfOrderToRetrieve = view.displayGetOrderDate();
         int orderNumberToRetrieve = view.displayGetOrderNumber();
-        service.removeOrder(orderNumberToRetrieve,dateOfOrderToRetrieve); //Possibly throws exception if order doesnt exist or cannot remove it
+        service.removeOrder(orderNumberToRetrieve, dateOfOrderToRetrieve); //Possibly throws exception if order doesnt exist or cannot remove it
         view.displayRemoveOrderSuccess();
     }
-    
+
     public void exportData() throws IOException { //throws Exception
         view.displayExportDataBanner();
         String dateOfOrderToRetrieve = view.displayGetOrderDate();

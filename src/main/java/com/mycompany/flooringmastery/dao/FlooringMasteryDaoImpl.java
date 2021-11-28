@@ -112,7 +112,7 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
         ordertext += materialcost.toString() + DELIMITER;  // we will use toString() to convert BigDecimal to string and then pass it 
         ordertext += laborcost.toString() + DELIMITER;
         ordertext += tax.toString() + DELIMITER;
-        ordertext += total.toString() + DELIMITER;
+        ordertext += total.toString();
         return ordertext;
     }
 
@@ -209,7 +209,18 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     }
 
     @Override
-    public List<Order> get_all_orders() { // will retrun all the orders in the file so natuarlly it will return all order for a specific date 
+    public Order getOrder(int number) {
+        try {
+            LoadOrder();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Order temp = List_Order.get(number);
+        return temp;
+    }
+
+    @Override
+    public List<Order> get_all_orders() { // will return all the orders in the file so naturally it will return all order for a specific date 
         try {
             LoadOrder();
         } catch (FileNotFoundException ex) {
@@ -258,17 +269,6 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
             Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         Order temp = List_Order.get(number); // save the object after editing the order and return it to the user 
-        return temp;
-    }
-
-    @Override
-    public Order getOrder(int number) {
-        try {
-            LoadOrder();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FlooringMasteryDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Order temp = List_Order.get(number);
         return temp;
     }
 

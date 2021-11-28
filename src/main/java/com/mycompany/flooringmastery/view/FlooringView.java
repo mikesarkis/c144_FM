@@ -80,6 +80,14 @@ public class FlooringView {
         }
     }
 
+    public void displayNoOrders() {
+        io.print("There are no orders for this date");
+    }
+
+    public void displayOrderError() {
+        io.print("Order was not added");
+    }
+
     public void displayAddOrderBanner() {
         io.print("  * * * * * * * * * * * * * * * Add An Order * * * * * * * * * * * * * * * ");
     }
@@ -119,13 +127,13 @@ public class FlooringView {
      * @param newOrder - new Order object to add information to
      * @return - The object with added information
      */
-    public String  displayAddCustomerName() {
+    public String displayAddCustomerName() {
         boolean keepGoing = true;
-        String newName="";
+        String newName = "";
         while (keepGoing) {
             //Regex pattern that checks for any values that are not A-Z, a-z, 0-9, or commas and periods
             Pattern p = Pattern.compile("[^a-zA-Z0-9,.]");
-            newName = io.readString("Enter customer name)", "Invalid Input", p);
+            newName = io.readString("Enter customer name", "Invalid Input", p);
             keepGoing = false;
         }
         return newName;
@@ -140,7 +148,7 @@ public class FlooringView {
      */
     public String displayAddStateToOrder(List<Tax> stateTaxes) {
         boolean keepGoing = true;
-        String state ="";
+        String state = "";
         while (keepGoing) {
             //Regex pattern that checks for any values that are not A-Z or a-z
             Pattern p = Pattern.compile("[^a-zA-Z]");
@@ -177,7 +185,7 @@ public class FlooringView {
      */
     public String displayAddProductToOrder(List<Product> KnownProducts) {
         boolean keepGoing = true;
-        String type="";
+        String type = "";
         while (keepGoing) {
             //Regex pattern that checks for any values that are not A-Z or a-z
             Pattern p = Pattern.compile("[^a-zA-Z]");
@@ -195,7 +203,7 @@ public class FlooringView {
 
                 //If the User enters a know product add it to the newOrder
             } else {
-                type=newProduct;
+                type = newProduct;
                 //Break out of loop
                 keepGoing = false;
             }
@@ -212,10 +220,10 @@ public class FlooringView {
      */
     public BigDecimal displayAddAreaToOrder() {
         //Regex pattern that checks for any values that are below 100
-        Pattern p = Pattern.compile("\\\\b(0*(?:[1-9][0-9]?))\\\\b");
+        Pattern p = Pattern.compile("\\b(0*(?:[1-9][0-9]?))\\b");
         String newArea = io.readString("Enter an area. Minimum area is 100 ", "Invalid Input", p);
         BigDecimal a = new BigDecimal(newArea);
-        BigDecimal newArea2= a.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal newArea2 = a.setScale(2, RoundingMode.HALF_UP);
         return newArea2;
     }
 
@@ -336,7 +344,7 @@ public class FlooringView {
             return editOrder;
         } else {
             BigDecimal a = new BigDecimal(newArea);
-            BigDecimal newArea2= a.setScale(2, RoundingMode.HALF_UP);
+            BigDecimal newArea2 = a.setScale(2, RoundingMode.HALF_UP);
             editOrder.set_area(newArea2);
             return editOrder;
         }
@@ -353,32 +361,12 @@ public class FlooringView {
      */
     public String displayGetOrderDate() {
         io.print("Enter the date of the order");
-        int year = io.readInt("Enter the year ");
+        int year = io.readInt("Enter the year (2000- 2021)", 2000, 2021);
         int month = io.readInt("Enter the month of the order (1 - 12)", 1, 12);
         int daysInMonth = YearMonth.of(year, month).lengthOfMonth();
         int day = io.readInt("Enter the day of the order (1 - " + daysInMonth + ")", 1, daysInMonth);
-        LocalDate newOrder = LocalDate.of(year, month, day);
-        return newOrder.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-    }
-        public String displayGetOrderDatetoEdit() {
-        boolean keepGoing = true;
-        String newDate = "";
-        while (keepGoing) {
-            io.print("Enter an order date to edit (the date should be after the current date - " + LocalDate.now(ZoneId.systemDefault()));
-            int year = io.readInt("Enter the year", Year.now().getValue(), 2100);
-            int month = io.readInt("Enter the month of the order (1 - 12)", 1, 12);
-            int daysInMonth = YearMonth.of(year, month).lengthOfMonth();
-            int day = io.readInt("Enter the day of the order (1 - " + daysInMonth + ")", 1, daysInMonth);
-            LocalDate orderDate = LocalDate.of(year, month, day);
-            LocalDate currentDate = LocalDate.now(ZoneId.systemDefault());
-            if (orderDate.isAfter(currentDate)) {
-                newDate = orderDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                keepGoing = false;
-            } else {
-                io.print("Enter a valid date in the future");
-            }
-        }
-        return newDate;
+        String date = LocalDate.of(year, month, day).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return date;
     }
 
     public int displayGetOrderNumber() {
@@ -412,13 +400,5 @@ public class FlooringView {
 
     public void displayExitBanner() {
         io.print("Exiting Flooring Mastery");
-    }
-    public void displaynoOrders()
-    {
-        io.print("we don't have any orders for this date");
-    }
-    public void displayordererror()
-    {
-        io.print("order was not added");
     }
 }

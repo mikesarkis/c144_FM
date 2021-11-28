@@ -98,12 +98,12 @@ public class Order {
     public BigDecimal get_material_cost(BigDecimal area, BigDecimal costpersquarefoot) // will calculate the MaterialCost
     {
         this.MaterialCost = area.multiply(costpersquarefoot);
-        return this.MaterialCost;
+        return this.MaterialCost.setScale(2, RoundingMode.HALF_UP);
     }
     public BigDecimal get_labor_cost(BigDecimal area, BigDecimal laborcostpersquarefoot)  // will calculate the  LaborCost
     {
         this.LaborCost = area.multiply(laborcostpersquarefoot);
-        return this.LaborCost;
+        return this.LaborCost.setScale(2, RoundingMode.HALF_UP);
     }
     public BigDecimal get_tax(BigDecimal materialCost,BigDecimal laborcost, BigDecimal taxrate) // will calculate the taxes 
     {
@@ -112,13 +112,13 @@ public class Order {
         BigDecimal tax = a.setScale(2, RoundingMode.HALF_UP);
         BigDecimal taxrate1 = taxrate.divide(tax);
         this.Tax= cost.multiply(taxrate1);
-        return this.Tax;
+        return this.Tax.setScale(2, RoundingMode.HALF_UP);
     }
     public BigDecimal get_total(BigDecimal materialCost,BigDecimal laborcost, BigDecimal tax ) // will calculate the total cost 
     {
         BigDecimal totalcost = materialCost.add(laborcost);
         this.Total = totalcost.add(tax);
-        return this.Total;
+        return this.Total.setScale(2, RoundingMode.HALF_UP);
     }
        
 }
