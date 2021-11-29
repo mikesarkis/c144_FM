@@ -9,13 +9,13 @@ package com.mycompany.flooringmastery.service;
  *
  * @author Mike
  */
-public class NoOrderFoundException extends Exception{
-    public NoOrderFoundException(String message)
-    {
+public class NoOrderFoundException extends Exception {
+
+    public NoOrderFoundException(String message) {
         super(message);
     }
-    public NoOrderFoundException(String message, Throwable cause)
-    {
+
+    public NoOrderFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.flooringmastery.dao;
 
 import com.mycompany.flooringmastery.dto.Order;
@@ -91,7 +86,6 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
             List_Order.put(currentOrder.get_order_number(), currentOrder);
         }
         scan.close();
-
     }
 
     private String marshallOrder(Order order) {  // will convert the order object to a string 
@@ -129,7 +123,6 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
             out.flush();
         }
         out.close();
-
     }
 
     private String get_date(String FileName) // will use the file name to get the order date
@@ -174,7 +167,6 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     public Order addOrder(String date, String name, String State, BigDecimal taxrate, String type, BigDecimal area, BigDecimal costperfoot, BigDecimal laborcostperfoot) throws FileNotFoundException, IOException { // will add order to the hashmap List_Order and return the object that we added 
         int number = 0;
         Order temp;
-
         LoadOrder();
 
         List<Order> list1 = get_all_orders();
@@ -183,7 +175,6 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
                 number = list1.get(i).get_order_number();
             }
             number++;
-
         } else {
             number = 1;
         }
@@ -196,7 +187,6 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
         temp.set_cost_per_square_foot(costperfoot);
         temp.set_labor_cost_per_square_foot(laborcostperfoot);
         List_Order.put(number, temp);
-
         writeOrder();
 
         return List_Order.get(number);
@@ -204,9 +194,7 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
 
     @Override
     public Order getOrder(int number) throws FileNotFoundException {
-
         LoadOrder();
-
         Order temp = List_Order.get(number);
         return temp;
     }
@@ -214,20 +202,15 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     @Override
     public List<Order> get_all_orders() throws FileNotFoundException { // will return all the orders in the file so naturally it will return all order for a specific date 
         LoadOrder();
-
         return new ArrayList<>(List_Order.values());
     }
 
     @Override
     public Order remove_order(int number) throws FileNotFoundException, IOException { // will remove an order and return the removed item 
         Order temp;
-
         LoadOrder();
-
         temp = List_Order.remove(number);
-
         writeOrder();
-
         return temp;
     }
 
@@ -268,7 +251,5 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
             out.flush();
         }
         out.close();
-
     }
-
 }

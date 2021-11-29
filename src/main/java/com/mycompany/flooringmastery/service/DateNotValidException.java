@@ -9,14 +9,14 @@ package com.mycompany.flooringmastery.service;
  *
  * @author Mike
  */
-public class DateNotValidException extends Exception{
-    public DateNotValidException(String message)
-    {
+public class DateNotValidException extends Exception {
+
+    public DateNotValidException(String message) {
         super(message);
     }
-    public DateNotValidException(String message, Throwable cause)
-    {
+
+    public DateNotValidException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
 }

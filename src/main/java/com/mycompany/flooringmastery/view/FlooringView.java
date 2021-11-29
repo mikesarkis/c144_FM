@@ -119,13 +119,11 @@ public class FlooringView {
     }
 
     /**
-     * Method to ask the User for a Customer name and add it to a new Order. Per
-     * requirements, the name: may not be blank, is allowed to contain
-     * [a-z][0-9] as well as periods and comma characters. "Acme, Inc." is a
-     * valid name.
+     * Method to ask the User for a valid Customer name. Per requirements, the
+     * name: may not be blank, is allowed to contain [a-z][0-9] as well as
+     * periods and comma characters. "Acme, Inc." is a valid name.
      *
-     * @param newOrder - new Order object to add information to
-     * @return - The object with added information
+     * @return - The String containing the Customer name
      */
     public String displayAddCustomerName() {
         boolean keepGoing = true;
@@ -140,11 +138,10 @@ public class FlooringView {
     }
 
     /**
-     * Method to add a tax state to a new Order
+     * Method to retrieve a valid tax state
      *
      * @param stateTaxes - A list of states that we can sell to
-     * @param newOrder - The order to add information to
-     * @return - An Order object with added State information
+     * @return - A String containing a valid State
      */
     public String displayAddStateToOrder(List<Tax> stateTaxes) {
         boolean keepGoing = true;
@@ -172,16 +169,14 @@ public class FlooringView {
                 keepGoing = false;
             }
         }
-        //Return our newORder object with added State information
         return state;
     }
 
     /**
-     * Method to add a Product type to a new Order
+     * Method to retrieve a Product type from the user
      *
      * @param KnownProducts - List of know products that we carry
-     * @param newOrder - The Order object to add information to
-     * @return - The order object with added Product information
+     * @return - A String containing Product type
      */
     public String displayAddProductToOrder(List<Product> KnownProducts) {
         boolean keepGoing = true;
@@ -208,15 +203,13 @@ public class FlooringView {
                 keepGoing = false;
             }
         }
-        //Return the newOrder object with added Product information 
         return type;
     }
 
     /**
-     * Method to add area to a new Order
+     * Method to retrieve area information from the User
      *
-     * @param newOrder - a new Order to add area information to
-     * @return - a new Order with added area information
+     * @return - A String with area information
      */
     public BigDecimal displayAddAreaToOrder() {
         //Regex pattern that checks for any values that are below 100

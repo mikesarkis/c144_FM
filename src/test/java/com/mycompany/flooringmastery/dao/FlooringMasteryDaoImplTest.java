@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,7 +80,7 @@ public class FlooringMasteryDaoImplTest {
             testDao.addOrder(date, customer_name, state, TexasTaxRate, product_type, area, WoodCostPerSquareFoot, WoodLaborCostPerSquareFoot);
             Order getOrder = testDao.getOrder(1);
             assertNotNull(getOrder, "The retrieved Order must not be null");
-            
+
             assertEquals(getOrder.get_order_number(),
                     1,
                     "Checking order number");
@@ -122,7 +120,7 @@ public class FlooringMasteryDaoImplTest {
             testDao.addOrder(date2, customer_name2, state2, WashingtonTaxRate, product_type2, area2, TileCostPerSquareFoot, TileLaborCostPerSquareFoot);
             List<Order> testOrders = testDao.get_all_orders();
             assertEquals(testDao.get_all_orders().size(), 2, "There should be 2 orders in the list");
-            
+
             assertEquals(testOrders.get(0).get_order_number(),
                     1,
                     "Checking order number");
@@ -150,7 +148,7 @@ public class FlooringMasteryDaoImplTest {
             assertEquals(testOrders.get(0).get_area(),
                     area,
                     "Checking order's area");
-            
+
             assertEquals(testOrders.get(1).get_order_number(),
                     2,
                     "Checking order number");
@@ -201,7 +199,7 @@ public class FlooringMasteryDaoImplTest {
             testDao.addOrder(date, customer_name, state, TexasTaxRate, product_type, area, WoodCostPerSquareFoot, WoodLaborCostPerSquareFoot);
             testDao.edit_order(1, testOrder2);
             List<Order> testOrders = testDao.get_all_orders();
-            
+
             assertEquals(testOrders.get(0).get_order_number(),
                     1,
                     "Checking order number");

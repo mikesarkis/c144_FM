@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.flooringmastery.service;
 
 import com.mycompany.flooringmastery.dao.FlooringMasteryDao;
@@ -63,7 +58,7 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         if (found == true) {
             return found;
         } else {
-            throw new NoSpecificOrderException("this specific order was not  found on this date");
+            throw new NoSpecificOrderException("This specific order was not found on this date");
         }
     }
 
@@ -254,6 +249,5 @@ public class FlooringMasteryServiceLayerFileImpl implements FlooringMasteryServi
         fileName = "Orders_" + datefixed + ".txt";
         dao.setFileName(fileName);
         dao.exportData();
-
     }
 }

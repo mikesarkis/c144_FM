@@ -9,14 +9,13 @@ package com.mycompany.flooringmastery.service;
  *
  * @author Mike
  */
-public class NoSpecificOrderException extends Exception{
-        public NoSpecificOrderException(String message)
-    {
+public class NoSpecificOrderException extends Exception {
+
+    public NoSpecificOrderException(String message) {
         super(message);
     }
-    public NoSpecificOrderException(String message, Throwable cause)
-    {
+
+    public NoSpecificOrderException(String message, Throwable cause) {
         super(message, cause);
     }
-    
 }

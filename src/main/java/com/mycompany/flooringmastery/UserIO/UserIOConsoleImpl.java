@@ -32,8 +32,7 @@ public class UserIOConsoleImpl implements UserIO {
      * A simple method that takes in a message to display on the console, and
      * then waits for an answer from the user to return.
      *
-     * @param msgPrompt - String explaining what information you want from the
-     * user.
+     * @param msgPrompt - String explaining what information you want from the user.
      * @return the answer to the message as string
      */
     @Override
@@ -44,9 +43,9 @@ public class UserIOConsoleImpl implements UserIO {
 
     /**
      *
-     * @param prompt
-     * @param regexPattern
-     * @return
+     * @param msgPrompt - String explaining what information you want from the user.
+     * @param regexPattern -  To determine if input is invalid data
+     * @return valid String
      */
     @Override
     public String readString(String msgPrompt, Pattern regexPattern) {
@@ -55,7 +54,9 @@ public class UserIOConsoleImpl implements UserIO {
         while (invalidInput) {
             // print the message msgPrompt (ex: asking for the # of cats!)
             stringValue = this.readString(msgPrompt);
-            if(stringValue.isEmpty()){return stringValue;} //User can just press enter if they dont want to input anything
+            if (stringValue.isEmpty()) {
+                return stringValue;
+            } //User can just press enter if they dont want to input anything
             if (regexPattern.matcher(stringValue).find()) {
                 this.print("Invalid input");
             } else {
@@ -64,12 +65,12 @@ public class UserIOConsoleImpl implements UserIO {
         }
         return stringValue;
     }
-    
-        /**
+
+    /**
      *
-     * @param prompt
-     * @param regexPattern
-     * @return
+     * @param msgPrompt - String explaining what information you want from the user.
+     * @param regexPattern -  To determine if input is invalid data
+     * @return valid String
      */
     @Override
     public String readString(String msgPrompt, String errorMsg, Pattern regexPattern) {

@@ -42,30 +42,30 @@ public class FlooringController {
             //Get menu choice from the user
             menuSelection = view.displayMenuAndGetChoice();
             //Based on user's choice, program will initiate a function
-            try{
-            switch (menuSelection) {
-                case 1: //Display Orders
-                    listOrders();
-                    break;
-                case 2: //Add an Order
-                    addOrder();
-                    break;
-                case 3: //Edit an Order
-                    editOrder();
-                    break;
-                case 4: //Remove an Order
-                    removeOrder();
-                    break;
-                case 5: //Export All Data
-                    exportData();
-                    break;
-                case 6: //Exit the program
-                    keepGoing = false;
-                    break;
-                default:
-                    unknownCommand();
-            }
-            }catch (NoOrderFoundException | NoSpecificOrderException | IOException e) {
+            try {
+                switch (menuSelection) {
+                    case 1: //Display Orders
+                        listOrders();
+                        break;
+                    case 2: //Add an Order
+                        addOrder();
+                        break;
+                    case 3: //Edit an Order
+                        editOrder();
+                        break;
+                    case 4: //Remove an Order
+                        removeOrder();
+                        break;
+                    case 5: //Export All Data
+                        exportData();
+                        break;
+                    case 6: //Exit the program
+                        keepGoing = false;
+                        break;
+                    default:
+                        unknownCommand();
+                }
+            } catch (NoOrderFoundException | NoSpecificOrderException | IOException e) {
                 view.displayErrorMessage(e.getMessage());
             }
         }
@@ -89,11 +89,8 @@ public class FlooringController {
         BigDecimal taxrate = service.getTaxRate(state);
         List<Product> list_product = service.getAllProduct();
         String product_type = view.displayAddProductToOrder(list_product);
-
         BigDecimal costperfoot = service.getCost(product_type);
-
         BigDecimal laborcostperfoot = service.getLaborCost(product_type);
-
         BigDecimal area = view.displayAddAreaToOrder();
 
         Order temp = service.addOrder(date, name, state, taxrate, product_type, area, costperfoot, laborcostperfoot);

@@ -73,7 +73,7 @@ public class FlooringMasteryServiceLayerFileImplTest {
                 fail("Should not be null after adding");
             }
         } catch (IOException ex) {
-            fail(ex.getMessage() + "  Exception should not occur");
+            fail(ex.getMessage() + " | Exception should not occur at this test");
         }
     }
 
@@ -82,7 +82,7 @@ public class FlooringMasteryServiceLayerFileImplTest {
         try {
             Order temp = service.editOrder(1, date, testOrder2);
         } catch (IOException | NoOrderFoundException | NoSpecificOrderException ex) {
-            fail(ex.getMessage() + " Exception should not occur");
+            fail(ex.getMessage() + " | Exception should not occur at this test");
         }
     }
 
@@ -100,7 +100,7 @@ public class FlooringMasteryServiceLayerFileImplTest {
         try {
             service.removeOrder(1, date);
         } catch (IOException | NoOrderFoundException | NoSpecificOrderException ex) {
-            fail(ex.getMessage() + " Exception should not occur");
+            fail(ex.getMessage() + " | Exception should not occur at this test");
         }
     }
 
@@ -119,7 +119,7 @@ public class FlooringMasteryServiceLayerFileImplTest {
         try {
             Order temp = service.getOrder(1, date);
         } catch (IOException | NoOrderFoundException | NoSpecificOrderException ex) {
-            fail(ex.getMessage() + " Exception should not occur");
+            fail(ex.getMessage() + " | Exception should not occur at this test");
         }
     }
 
@@ -141,7 +141,7 @@ public class FlooringMasteryServiceLayerFileImplTest {
                 fail("There should be 2 items in the list");
             }
         } catch (NoOrderFoundException | IOException ex) {
-            fail(ex.getMessage() + " Exception should not occur");
+            fail(ex.getMessage() + " | Exception should not occur at this test");
         }
     }
 }
