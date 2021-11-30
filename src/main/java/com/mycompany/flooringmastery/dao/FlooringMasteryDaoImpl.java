@@ -238,19 +238,20 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     public void exportData() throws FileNotFoundException, IOException {
         LoadOrder();
 
-        PrintWriter out;
-        out = new PrintWriter(new FileWriter(EXPORTFILE), true);
+        PrintWriter write;
+        write = new PrintWriter(new FileWriter(EXPORTFILE,true));
         String firstline = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total,OrderDate";
-        out.println(firstline);
-        out.flush();
+        write.println(firstline);
+        write.flush();
         String Ordertxt;
         List<Order> list1 = this.get_all_orders();
         for (Order current : list1) // will write every order in the list to the file 
         {
-            Ordertxt = marshallOrder(current) + current.get_order_date();
-            out.println(Ordertxt);
-            out.flush();
+            Ordertxt = marshallOrder(current) + " , "+current.get_order_date();
+            write.println(Ordertxt);
+            write.flush();
         }
-        out.close();
+        write.close();
+
     }
 }
