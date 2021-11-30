@@ -39,6 +39,7 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
             myfile.createNewFile();
             writeOrder();
         }
+        List_Order.clear();
     }
 
     public String getfileName() {
