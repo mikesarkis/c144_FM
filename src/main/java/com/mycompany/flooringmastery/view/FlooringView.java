@@ -394,4 +394,34 @@ public class FlooringView {
     public void displayExitBanner() {
         io.print("Exiting Flooring Mastery");
     }
+    public String getOrderEditDate()
+    {
+         boolean keepGoing = true;
+        String newDate = "";
+        while (keepGoing) {
+            io.print("Enter the order date that you want to edit (it should be in the future) " );
+            int year = io.readInt("Enter the year", Year.now().getValue(), 2100);
+            int month = io.readInt("Enter the month of the order (1 - 12)", 1, 12);
+            int daysInMonth = YearMonth.of(year, month).lengthOfMonth();
+            int day = io.readInt("Enter the day of the order (1 - " + daysInMonth + ")", 1, daysInMonth);
+            LocalDate orderDate = LocalDate.of(year, month, day);
+            LocalDate currentDate = LocalDate.now(ZoneId.systemDefault());
+            if (orderDate.isAfter(currentDate)) {
+                newDate = orderDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                keepGoing = false;
+            } else {
+                io.print("Enter a valid order date in the future");
+            }
+        }
+        return newDate;
+    }
+    public String displayGetOrderDate2() {
+        io.print("Enter the date of the order");
+        int year = io.readInt("Enter the year (2000-2050)", 2000,2050);
+        int month = io.readInt("Enter the month of the order (1 - 12)", 1, 12);
+        int daysInMonth = YearMonth.of(year, month).lengthOfMonth();
+        int day = io.readInt("Enter the day of the order (1 - " + daysInMonth + ")", 1, daysInMonth);
+        String date = LocalDate.of(year, month, day).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return date;
+    }
 }
