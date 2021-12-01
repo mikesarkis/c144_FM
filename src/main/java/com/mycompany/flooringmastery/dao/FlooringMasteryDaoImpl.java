@@ -33,13 +33,13 @@ public class FlooringMasteryDaoImpl implements FlooringMasteryDao {
     public void setFileName(String filename) throws IOException {
         FILE = filename;
         File myfile = new File(FILE);
+        List_Order.clear();
         if (myfile.exists()) {
             // do nothing
         } else {
             myfile.createNewFile();
-            writeOrder();
         }
-        List_Order.clear();
+        
     }
 
     public String getfileName() {
