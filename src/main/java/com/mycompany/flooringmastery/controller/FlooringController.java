@@ -103,7 +103,7 @@ public class FlooringController {
 
     public void editOrder() throws NoOrderFoundException, FileNotFoundException, IOException, NoSpecificOrderException { //throws Exception
         view.displayEditOrderBanner();
-        String dateOfOrderToRetrieve = view.displayGetOrderDate();
+        String dateOfOrderToRetrieve = view.getOrderEditDate();
         int orderNumberToRetrieve = view.displayGetOrderNumber();
         //Maintain the original copy of the object in case the User decides to discard their edits
         Order originalOrder = service.getOrder(orderNumberToRetrieve, dateOfOrderToRetrieve);
@@ -142,7 +142,7 @@ public class FlooringController {
 
     public void removeOrder() throws NoOrderFoundException, IOException, NoSpecificOrderException { //throws Exception
         view.displayRemoveOrderBanner();
-        String dateOfOrderToRetrieve = view.displayGetOrderDate();
+        String dateOfOrderToRetrieve = view.displayGetOrderDate2();
         int orderNumberToRetrieve = view.displayGetOrderNumber();
         service.removeOrder(orderNumberToRetrieve, dateOfOrderToRetrieve); //Possibly throws exception if order doesnt exist or cannot remove it
         view.displayRemoveOrderSuccess();
@@ -150,7 +150,7 @@ public class FlooringController {
 
     public void exportData() throws IOException { //throws Exception
         view.displayExportDataBanner();
-        String dateOfOrderToRetrieve = view.displayGetOrderDate();
+        String dateOfOrderToRetrieve = view.displayGetOrderDate2();
         service.exportData(dateOfOrderToRetrieve);
         view.displayExportDataSuccess();
     }
